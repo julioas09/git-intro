@@ -36,9 +36,9 @@ def index():
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    delete = Todo.query.get_or_404(id)
+    task_to_delete = Todo.query.get_or_404(id)
     try:
-        db.session.delete(delete)
+        db.session.delete(task_to_delete)
         db.session.commit()
         return redirect('/')
     except:
@@ -53,9 +53,9 @@ def get_id(id):
 
 @app.route('/updtating_form/<int:id>', methods=['POST', 'GET'])
 def update(id):
-    delete = Todo.query.get_or_404(id)
+    task_to_delete = Todo.query.get_or_404(id)
     try:
-        db.session.delete(delete)
+        db.session.delete(task_to_delete)
         db.session.commit()
     except:
         return 'Something Went Wrong'
