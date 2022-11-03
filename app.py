@@ -36,9 +36,9 @@ def index():
 
 @app.route('/delete/<int:id>')
 def delete(id):
-    task_to_delete = Todo.query.get_or_404(id)
+    delete = Todo.query.get_or_404(id)
     try:
-        db.session.delete(task_to_delete)
+        db.session.delete(delete)
         db.session.commit()
         return redirect('/')
     except:
@@ -46,17 +46,35 @@ def delete(id):
     
     
 
-@app.route('/update')
-def update():
- update = Todo.query.get_or_404(id)
-    if request.method == 'POST':
-        update.content = request.form['content']
+@app.route('/update/<int:id>')
+
+def get_id(id):
+    return render_template('update.html', task= id)
+
+@app.route('/updtating_form/<int:id>', methods=['POST', 'GET'])
+def update(id):
+    delete = Todo.query.get_or_404(id)
+    try:
+        db.session.delete(delete)
         db.session.commit()
-        return redirect('/')
-    
+    except:
+        return 'Something Went Wrong'
+
+    if request.method == 'POST':
+        task_content = request.form['content']
+        new_task = Todo(content=task_content)
+        new_task.id=id
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'Something Went Wrong'
+        return render_template('index.html')
     else:
-        return render_template('update.html', task = update)
-    return render_template('update.html')
+        tasks = Todo.query.order_by(Todo.date_created).all()
+        return render_template('update.html', tasks=tasks)
+    return render_template('update.html', task= id)
 
 if __name__ == '__main__':
     app.run(debug=True)
