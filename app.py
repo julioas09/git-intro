@@ -15,7 +15,9 @@ class Todo(db.Model):
     def __repr__(self):
         return '<Task %r>' % self.id
 
-db.create_all()
+#i am not sure why i had to add this but without it my app would not run
+with app.app_context():
+    db.create_all()
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -46,9 +48,17 @@ def delete(id):
     
     
 
-@app.route('/update')
-def update():
-    return render_template('update.html')
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+    task = Todo.query.get_or_404(id)
+    if request.method == 'POST':
+        task.content = request.form['contentupdate']
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'There was an issue updating your task'
+    return render_template('update.html', task = task)
 
 if __name__ == '__main__':
     app.run(debug=True)
