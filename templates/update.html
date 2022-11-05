@@ -5,6 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    <h1>UPDATE</h1>
-    <p>body</p>
+    <h1>Edit your task...if you dare</h1>
+    <p>You are currently editing the following task: {{task.content}}</p>
+    <form action="/update/{{task.id}}" method="POST">
+        <input type="text" name="contentupdate" id="contentupdate" placeholder=" ^_^" required>
+        <input type="submit" value="Update">
+    
+    </form>
+
 {% endblock %}
+
+
