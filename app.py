@@ -48,6 +48,15 @@ def delete(id):
 
 @app.route('/update')
 def update():
+    task=Todo.query.get_or_404(id)
+    if request.method == 'POST':
+        task.content = request.form['upcontent']
+        try:
+            db.session.commit()
+            return redirect('/')
+        except:
+            return 'Problem updating your task'
+    return render_template('update.html',task=task)
     return render_template('update.html')
 
 if __name__ == '__main__':
