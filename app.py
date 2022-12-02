@@ -21,10 +21,10 @@ db.create_all()
 def index():
     if request.method == 'POST':
         task_content = request.form['content']
-        new_task = Todo(content=task_content)
+        #new_task = Todo(content=task_content)
 
         try:
-            db.session.add(new_task)
+            db.session.add(task_content)
             db.session.commit()
             return redirect('/')
         except:
@@ -46,9 +46,16 @@ def delete(id):
     
     
 
-@app.route('/update')
-def update():
-    return render_template('update.html')
+@app.route('/update/<int:id>', methods=['POST', 'GET'])
+def update(id):
+    task_to_update = Todo.query.get_or_404(id)
+    if request.method == 'POST':
+        task_to_update.content = request.form['content']
+        db.session.commit()
+        return redirect('/')
+
+    else:
+        return render_template('update.html', task = task_to_update)
 
 if __name__ == '__main__':
     app.run(debug=True)
